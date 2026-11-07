@@ -30,7 +30,8 @@ and leaves both destination tables empty.
 memory at a time. The transformed outputs are collected only for the current
 chunk, so each branch can contain a different number of rows. Use separate
 destination connections in the two ``load`` calls to send the branches to
-different databases. Each call commits its own output by default. When both
-tables use the same destination connection, pass ``commit_chunks=False`` to
-both loads and commit that connection only after both succeed. Separate
-destinations have independent transactions.
+different databases. Each call commits its own output by default. This example
+is not atomic across branches: if a later load fails, earlier loads can already
+have committed. Setting ``commit_chunks=False`` still commits at the end of
+each load; it does not make both loads a single transaction, even with the same
+destination connection. Separate destinations have independent transactions.
